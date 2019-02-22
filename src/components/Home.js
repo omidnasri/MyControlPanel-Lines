@@ -247,7 +247,7 @@ class Home extends Component {
                     <td data-res="false">
                       <a href="javascript:;" data-public={item.IsPublic} className={`${item.IsPublic ? "disabled-link" : ""}`} onClick={(event) => props.onEditEmail(event)} data-id={item.Id}> ویرایش </a>  |
                       <a href="javascript:;" data-public={item.IsPublic} className={`${item.IsPublic ? "disabled-link" : ""}`} onClick={(event) => props.onDeleteEmail(event)} data-id={item.Id}> حذف </a> |
-                      <Link to={`/admin/email/email/${ item.Id }`}> مدیریت </Link>
+                      <Link to={`${item.IsPublic ? `/admin/email` : `/admin/email/email/${ item.Id }`}`} className={`${item.IsPublic ? "disabled-link" : ""}`}> مدیریت </Link>
                     </td>
                   </tr>
                 )
