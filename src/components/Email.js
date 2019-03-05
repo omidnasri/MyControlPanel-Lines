@@ -8,9 +8,13 @@ class EmailSendItems extends Component {
         }
     }
 
+    defaultPostRequestInfo(body = null) {
+        return { method: "POST", headers: { "Content-Type": "application/json" }, body: body };
+    }
+
     componentDidMount = () => {
-        const {params} =this.props.match;
-        window.fetch("/admin/email/getEmails", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lineId: params.key }) }).then(response => response.json()).then(data => {
+        const { params } = this.props.match;
+        window.fetch("/admin/email/getEmails", this.defaultPostRequestInfo(JSON.stringify({ lineId: params.key }))).then(response => response.json()).then(data => {
             this.setState({ dataSource: data });
         });
 
@@ -43,7 +47,7 @@ class EmailSendItems extends Component {
                                                             {item.Subject}
                                                         </div>
                                                         <div className="todo-tasklist-item-text">
-                                                            {item.Message}    
+                                                            {item.Message}
                                                         </div>
                                                     </div>
                                                 );
@@ -55,7 +59,7 @@ class EmailSendItems extends Component {
                             <div className="todo-tasklist-devider">
                             </div>
                             <div className="col-md-7 col-sm-8">
-                                
+
                             </div>
                         </div>
                     </div>
