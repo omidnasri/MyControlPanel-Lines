@@ -9,8 +9,6 @@ class Slack extends Component {
       slackDetail: {
         Id: "",
         Subject: "",
-        UserName: "",
-        Channel: "",
         Status: "",
         Description: "",
         WebhookUrl: "",
@@ -48,7 +46,7 @@ class Slack extends Component {
   onEditSlack = (event) => {
     let id = event.target.getAttribute("data-id");
     window.fetch("/admin/email/getSlackBy", this.defaultPostRequestInfo(JSON.stringify({ key: id }))).then(response => response.json()).then(data => {
-      this.setState(prevState => ({ slackDetail: { ...prevState.slackDetail, Id: data.Id, Subject: data.Subject, UserName: data.UserName, Channel: data.Channel, Status: data.Status, Description: data.Description, WebhookUrl: data.WebhookUrl } }), this.canSubmit(data.WebhookUrl));
+      this.setState(prevState => ({ slackDetail: { ...prevState.slackDetail, Id: data.Id, Subject: data.Subject, Status: data.Status, Description: data.Description, WebhookUrl: data.WebhookUrl } }), this.canSubmit(data.WebhookUrl));
     });
   }
 
@@ -62,7 +60,8 @@ class Slack extends Component {
         }
         entities.push(data);
         this.setState({ canSubmit: false, dataSource: entities });
-        this.setState(prevState => ({ slackDetail: { ...prevState.slackDetail, Id: "", Subject: "", UserName: "", Channel: "", Description: "", WebhookUrl: "" } }));
+        this.setState(prevState => ({ slackDetail: { ...prevState.slackDetail, Id: "", Subject: "", Description: "", WebhookUrl: "" } }));
+        window.Metronic.initTable();
       });
     }
   }
@@ -78,8 +77,6 @@ class Slack extends Component {
             <tr>
               <th>ردیف</th>
               <th>عنوان</th>
-              <th>نام کاربری</th>
-              <th>نام کانال</th>
               <th>وضعیت</th>
               <th>توضیحات</th>
               <th>آدرس وب‌هوک</th>
@@ -93,8 +90,6 @@ class Slack extends Component {
                   <tr>
                     <td>{index + 1}</td>
                     <td>{item.Subject}</td>
-                    <td>{item.UserName}</td>
-                    <td>{item.Channel}</td>
                     <td>{item.Status ? "فعال" : "غیرفعال"}</td>
                     <td>{item.Description}</td>
                     <td>{item.WebhookUrl}</td>
@@ -134,23 +129,11 @@ class Slack extends Component {
                 </div>
                 <div className="col-md-3">
                   <div className="form-group">
-                    <label for="UserName">نام کاربری:</label>
-                    <input type="text" name="UserName" className="form-control" value={this.state.slackDetail.UserName} onChange={this.submitHandleChange} />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <label for="Channel">نام کانال:</label>
-                    <input type="input" name="Channel" className="form-control" value={this.state.slackDetail.Channel} onChange={this.submitHandleChange} />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
                     <label for="Description">توضیحات:</label>
                     <input type="input" name="Description" className="form-control" value={this.state.slackDetail.Description} onChange={this.submitHandleChange} />
                   </div>
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-6">
                   <div className="form-group">
                     <label for="WebhookUrl">آدرس وب‌هوک:</label>
                     <div className="input-group">
