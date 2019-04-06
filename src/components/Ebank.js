@@ -8,12 +8,27 @@ class Ebank extends Component {
         }
     }
 
+    defaultPostRequestInfo(body = null) {
+        return { method: "POST", headers: { "Content-Type": "application/json" }, body: body };
+    }
+
     componentDidMount() {
-        window.fetch("/admin/email/getEbanks", { method: "POST", headers: { "Content-Type": "application/json" }}).then(response => response.json()).then(data => {
+        window.fetch("/admin/email/getEbanks", this.defaultPostRequestInfo()).then(response => response.json()).then(data => {
             this.setState({ dataSource: data });
         });
 
         window.initResponsiveComponent();
+    }
+
+    deleteEmail = (key) => {
+        window.fetch("/admin/email/deleteEbank", this.defaultPostRequestInfo(JSON.stringify({ key: key }))).then(response => {
+            if (response.status == 200) {
+                this.setState({ dataSource: this.state.dataSource.filter(function (item) { return item.Id != key; }) });
+            }
+            else {
+                console.log(response);
+            }
+        })
     }
 
     render() {
@@ -28,6 +43,7 @@ class Ebank extends Component {
                             <th>نام خانوادگی</th>
                             <th>نام مستعار</th>
                             <th>کاربر ایجاد کننده</th>
+                            <th data-res="false"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +57,9 @@ class Ebank extends Component {
                                         <td>{item.LastName}</td>
                                         <td>{item.AliasName}</td>
                                         <td>{item.UserCreator}</td>
+                                        <td data-res="fase">
+                                            <a href="javascript:;" onClick={(event) => this.deleteEmail(item.Id)}> حذف </a>
+                                        </td>
                                     </tr>
                                 )
                             })
